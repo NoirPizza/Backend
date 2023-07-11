@@ -3,7 +3,7 @@
 
 -- TODO: create table for authenticating
 
-create table "user"
+CREATE TABLE "user"
 (
     id          SERIAL PRIMARY KEY,
     name        VARCHAR(20)        NOT NULL,
@@ -14,7 +14,7 @@ create table "user"
 );
 CREATE INDEX idx_phoneNumber ON "user" (phoneNumber);
 
-create table feedback
+CREATE TABLE feedback
 (
     id      SERIAL PRIMARY KEY,
     userId  INTEGER NOT NULL,
@@ -23,7 +23,7 @@ create table feedback
     FOREIGN KEY (userId) REFERENCES "user" ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-create table address
+CREATE TABLE address
 (
     id         SERIAL PRIMARY KEY,
     userId     INTEGER     NOT NULL,
@@ -45,14 +45,14 @@ CREATE TABLE pizza
     image       TEXT
 );
 
-create table ingredient
+CREATE TABLE ingredient
 (
     id       SERIAL PRIMARY KEY,
     name     VARCHAR(40) UNIQUE NOT NULL,
     addPrice INTEGER            NOT NULL
 );
 
-create table ingredient_on_pizza
+CREATE TABLE ingredient_on_pizza
 (
     id           SERIAL PRIMARY KEY,
     pizzaId      INTEGER NOT NULL,
@@ -61,27 +61,35 @@ create table ingredient_on_pizza
     FOREIGN KEY (ingredientId) REFERENCES "ingredient" ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- default обрабатывается, создан, готовится, готов, доставляется, доставлен
-create table order_status
+CREATE TABLE order_status
 (
     id   SERIAL PRIMARY KEY,
     type VARCHAR(15) NOT NULL
 );
+INSERT INTO order_status (id, type)
+VALUES (1, 'Обрабатывается'),
+       (2, 'Создан'),
+       (3, 'готовится'),
+       (4, 'готов'),
+       (5, 'доставляется'),
+       (6, 'доставлен');
 
--- default самовывоз, доставка
-create table delivery_type
+CREATE TABLE delivery_type
 (
     id   SERIAL PRIMARY KEY,
     type VARCHAR(15) NOT NULL
 );
+INSERT INTO delivery_type (id, type)
+VALUES (1, 'Самовывоз'),
+       (2, 'Доставка');
 
-create table "order"
+CREATE TABLE "order"
 (
     id             SERIAL PRIMARY KEY,
     orderNumber    VARCHAR(4),
     statusId       INTEGER   NOT NULL,
     userId         INTEGER,
-    userPhone      VARCHAR(12),            -- same as in user table. unwanted duplication of filed comes domain logic
+    userPhone      VARCHAR(12),            -- same as in user TABLE. unwanted duplication of filed comes domain logic
     deliveryTypeId INTEGER   NOT NULL,
     deliveryTime   TIMESTAMP DEFAULT NULL, -- if null, then order should be delivered ASAP
     date           TIMESTAMP NOT NULL,
@@ -94,36 +102,47 @@ create table "order"
     FOREIGN KEY (userId) REFERENCES "user" ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- default целая, половина, четверть, кусок
-create table part
+CREATE TABLE part
 (
     id   SERIAL PRIMARY KEY,
     type VARCHAR(15) NOT NULL
 );
+INSERT INTO part (id, type)
+VALUES (1, 'Целая'),
+       (2, 'Половина'),
+       (3, 'Четверть'),
+       (4, 'Кусок');
 
--- default стандарт (33), мини (25), большая (40)
-create table size_to_price_correlation
+CREATE TABLE size_to_price_correlation
 (
     id          SERIAL PRIMARY KEY,
-    type        VARCHAR(15) NOT NULL,
-    coefficient INTEGER
+    type        VARCHAR(20) NOT NULL,
+    coefficient NUMERIC
 );
+INSERT INTO size_to_price_correlation (id, type, coefficient)
+VALUES (1, 'Стандарт (33 см)', 1),
+       (2, 'Мини (25 см)', 0.8),
+       (3, 'Большая (40 см)', 1.2);
 
--- default тонкое, толстое
-create table dough
+CREATE TABLE dough
 (
     id   SERIAL PRIMARY KEY,
     type VARCHAR(15) NOT NULL
 );
+INSERT INTO dough (id, type)
+VALUES (1, 'Тонкое'),
+       (2, 'Толстое');
 
--- default томатная, сливочная
-create table base
+CREATE TABLE base
 (
     id   SERIAL PRIMARY KEY,
     type VARCHAR(15) NOT NULL
 );
+INSERT INTO base (id, type)
+VALUES (1, 'Томатная'),
+       (2, 'Сливочная');
 
-create table ordered_pizza
+CREATE TABLE ordered_pizza
 (
     id      SERIAL PRIMARY KEY,
     pizzaId INTEGER NOT NULL,
@@ -138,7 +157,7 @@ create table ordered_pizza
     FOREIGN KEY (partId) REFERENCES "part" ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-create table ordered_pizza_addition
+CREATE TABLE ordered_pizza_addition
 (
     id             SERIAL PRIMARY KEY,
     orderedPizzaId INTEGER NOT NULL,
