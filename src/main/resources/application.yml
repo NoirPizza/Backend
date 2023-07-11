@@ -1,0 +1,9 @@
+spring:
+    datasource:
+        password: 64_asdF12
+        url: jdbc:postgresql://localhost:5432/pizza
+        username: postgres
+    jpa:
+        database-platform: org.hibernate.dialect.PostgreSQLDialect
+    liquibase:
+        change-log: classpath:db/changelog/db.changelog-master.yaml
