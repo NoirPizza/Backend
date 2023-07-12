@@ -45,7 +45,7 @@ CREATE TABLE pizza
     image       TEXT                NOT NULL
 );
 
-CREATE TABLE ingredient
+CREATE TABLE pizza_ingredient
 (
     id       SERIAL PRIMARY KEY,
     name     VARCHAR(40) UNIQUE NOT NULL,
@@ -58,7 +58,7 @@ CREATE TABLE ingredient_on_pizza
     pizzaId      INTEGER NOT NULL,
     ingredientId INTEGER NOT NULL,
     FOREIGN KEY (pizzaId) REFERENCES "pizza" ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (ingredientId) REFERENCES "ingredient" ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (ingredientId) REFERENCES "pizza_ingredient" ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE order_status
@@ -163,5 +163,5 @@ CREATE TABLE ordered_pizza_addition
     orderedPizzaId INTEGER NOT NULL,
     ingredientId   INTEGER NOT NULL,
     FOREIGN KEY (orderedPizzaId) REFERENCES "ordered_pizza" ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (ingredientId) REFERENCES "ingredient" ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (ingredientId) REFERENCES "pizza_ingredient" ON DELETE CASCADE ON UPDATE CASCADE
 );
