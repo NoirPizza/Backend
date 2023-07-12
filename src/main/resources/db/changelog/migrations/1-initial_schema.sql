@@ -42,7 +42,7 @@ CREATE TABLE pizza
     weight      INTEGER             NOT NULL,
     price       INTEGER             NOT NULL,
     description TEXT,
-    image       TEXT
+    image       TEXT                NOT NULL
 );
 
 CREATE TABLE ingredient
