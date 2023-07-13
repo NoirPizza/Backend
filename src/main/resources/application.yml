@@ -1,9 +1,18 @@
 spring:
-    datasource:
-        password: 64_asdF12
-        url: jdbc:postgresql://localhost:5432/pizza
-        username: postgres
-    jpa:
-        database-platform: org.hibernate.dialect.PostgreSQLDialect
-    liquibase:
-        change-log: classpath:db/changelog/db.changelog-master.yaml
+  datasource:
+    password: 64_asdF12
+    url: jdbc:postgresql://localhost:5432/pizza
+    username: postgres
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, shutdown, prometheus
+  endpoint:
+    shutdown:
+      enabled: true

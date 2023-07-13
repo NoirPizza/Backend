@@ -1,19 +1,43 @@
 package com.pizza.pizzashop.dtos;
 
+import com.pizza.pizzashop.entities.Pizza;
+import jakarta.validation.constraints.*;
+
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * DTO for {@link Pizza}
+ */
 public class PizzaDTO {
     private Long id;
+    @NotNull
+    @NotBlank(message = "Name is required")
+    @Size(min = 1, max = 100, message = "Name length should be in range from 1 to 100")
     private String name;
+    @NotNull
+    @Min(value = 1, message = "Weight value must be greater than 0")
     private Integer weight;
+    @NotNull
+    @Min(value = 1, message = "Price value must be greater than 0")
     private Integer price;
-    private String description;
-    private String image;
 
+    private String description;
+    @NotNull
+    @NotBlank(message = "Image is required in base64 format")
+    private String image;
+    @NotNull
+    @Size(min = 1, message = "Must be at least 1 ingredient added")
     private List<PizzaIngredientDTO> ingredients;
 
-    public PizzaDTO(Long id, String name, Integer weight, Integer price, String description, String image, List<PizzaIngredientDTO> ingredients) {
+    public PizzaDTO(Long id,
+                    @NotNull String name,
+                    @NotNull Integer weight,
+                    @NotNull Integer price,
+                    String description,
+                    @NotNull String image,
+                    @NotNull List<PizzaIngredientDTO> ingredients
+    ) {
         this.id = id;
         this.name = name;
         this.weight = weight;
@@ -31,27 +55,27 @@ public class PizzaDTO {
         this.id = id;
     }
 
-    public String getName() {
+    public @NotNull String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(@NotNull String name) {
         this.name = name;
     }
 
-    public Integer getWeight() {
+    public @NotNull Integer getWeight() {
         return weight;
     }
 
-    public void setWeight(Integer weight) {
+    public void setWeight(@NotNull Integer weight) {
         this.weight = weight;
     }
 
-    public Integer getPrice() {
+    public @NotNull Integer getPrice() {
         return price;
     }
 
-    public void setPrice(Integer price) {
+    public void setPrice(@NotNull Integer price) {
         this.price = price;
     }
 
@@ -63,19 +87,19 @@ public class PizzaDTO {
         this.description = description;
     }
 
-    public String getImage() {
+    public @NotNull String getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(@NotNull String image) {
         this.image = image;
     }
 
-    public List<PizzaIngredientDTO> getIngredients() {
+    public @NotNull List<PizzaIngredientDTO> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(List<PizzaIngredientDTO> ingredients) {
+    public void setIngredients(@NotNull List<PizzaIngredientDTO> ingredients) {
         this.ingredients = ingredients;
     }
 
