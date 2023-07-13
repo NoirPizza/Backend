@@ -1,6 +1,7 @@
 package com.pizza.pizzashop.dtos;
 
 import com.pizza.pizzashop.entities.PizzaIngredient;
+import jakarta.validation.constraints.*;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -10,10 +11,15 @@ import java.util.Objects;
  */
 public class PizzaIngredientDTO implements Serializable {
     private Long id;
+    @NotNull
+    @NotBlank(message = "Name is required")
+    @Size(min = 1, max = 40, message = "Name length should be in range from 1 to 40")
     private String name;
+    @NotNull
+    @Min(value = 1, message = "Addrice value must be greater than 0")
     private Integer addprice;
 
-    public PizzaIngredientDTO(Long id, String name, Integer addprice) {
+    public PizzaIngredientDTO(Long id, @NotNull String name, @NotNull Integer addprice) {
         this.id = id;
         this.name = name;
         this.addprice = addprice;
@@ -27,19 +33,19 @@ public class PizzaIngredientDTO implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
+    public @NotNull String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(@NotNull String name) {
         this.name = name;
     }
 
-    public Integer getAddprice() {
+    public @NotNull Integer getAddprice() {
         return addprice;
     }
 
-    public void setAddprice(Integer addprice) {
+    public void setAddprice(@NotNull Integer addprice) {
         this.addprice = addprice;
     }
 

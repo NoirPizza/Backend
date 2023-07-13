@@ -1,15 +1,23 @@
 package com.pizza.pizzashop.controllers;
 
+import com.pizza.pizzashop.dtos.ErrorDTO;
 import com.pizza.pizzashop.dtos.PizzaIngredientDTO;
+import com.pizza.pizzashop.exceptions.NotFoundException;
+import com.pizza.pizzashop.exceptions.ValidationFailedException;
 import com.pizza.pizzashop.services.PizzaIngredientService.PizzaIngredientService;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Validated
 @RestController
 @RequestMapping("/api/ingredient")
 public class PizzaIngredientController {
@@ -27,30 +35,42 @@ public class PizzaIngredientController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PizzaIngredientDTO> getIngredientById(@PathVariable Long id) {
+    public ResponseEntity<PizzaIngredientDTO> getIngredientById(
+            @Positive(message = " Ingredient ID must be positive") @PathVariable Long id
+    ) throws NotFoundException {
         PizzaIngredientDTO ingredient = ingredientService.getIngredientById(id);
         if (ingredient != null) {
             return new ResponseEntity<>(ingredient, HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        throw new NotFoundException("Unable to find ingredient with id " + id);
     }
 
     @PostMapping
-    public ResponseEntity<PizzaIngredientDTO> createIngredient(@RequestBody PizzaIngredientDTO ingredientDTO) {
+    public ResponseEntity<PizzaIngredientDTO> createIngredient(
+            @Valid @RequestBody PizzaIngredientDTO ingredientDTO,
+            BindingResult result
+    ) throws ValidationFailedException {
+        if (result.hasErrors()) {
+            throw new ValidationFailedException("Validation failed.\n" + result.getAllErrors());
+        }
         PizzaIngredientDTO createdIngredient = ingredientService.createIngredient(ingredientDTO);
         return new ResponseEntity<>(createdIngredient, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<PizzaIngredientDTO> updatePizza(
-            @PathVariable Long id,
-            @RequestBody PizzaIngredientDTO ingredientDTO
-    ) {
+            @Positive(message = " Ingredient ID must be positive") @PathVariable Long id,
+            @Valid @RequestBody PizzaIngredientDTO ingredientDTO,
+            BindingResult result
+    ) throws ValidationFailedException, NotFoundException {
+        if (result.hasErrors()) {
+            throw new ValidationFailedException("Validation failed.\n" + result.getAllErrors());
+        }
         PizzaIngredientDTO updatedIngredient = ingredientService.updateIngredient(id, ingredientDTO);
         if (updatedIngredient != null) {
             return new ResponseEntity<>(updatedIngredient, HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        throw new NotFoundException("Unable to find ingredient with id " + id);
     }
 
     @DeleteMapping("/{id}")
