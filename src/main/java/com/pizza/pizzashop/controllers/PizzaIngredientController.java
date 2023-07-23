@@ -1,6 +1,5 @@
 package com.pizza.pizzashop.controllers;
 
-import com.pizza.pizzashop.dtos.ErrorDTO;
 import com.pizza.pizzashop.dtos.PizzaIngredientDTO;
 import com.pizza.pizzashop.exceptions.NotFoundException;
 import com.pizza.pizzashop.exceptions.ValidationFailedException;

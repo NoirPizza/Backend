@@ -1,18 +1,39 @@
 --liquibase formatted sql
 --changeset w1ldy0uth:1
 
--- TODO: create table for authenticating
-
 CREATE TABLE "user"
 (
     id          SERIAL PRIMARY KEY,
-    name        VARCHAR(20)        NOT NULL,
+    login       VARCHAR(255) UNIQUE NOT NULL,
+    password    VARCHAR(255)        NOT NULL, -- bcrypt
+    name        VARCHAR(20)         NOT NULL,
     surname     VARCHAR(40),
-    phoneNumber VARCHAR(12) UNIQUE NOT NULL, -- supports bot 8*** and +7*** formats
-    email       VARCHAR(50),
-    birthday    VARCHAR(10)                  -- dd.mm.yyyy
+    phoneNumber VARCHAR(12) UNIQUE  NOT NULL, -- supports bot 8*** and +7*** formats
+    email       VARCHAR(50) UNIQUE,
+    birthday    VARCHAR(10),                  -- dd.mm.yyyy
+    created_at  TIMESTAMP           NOT NULL,
+    updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 CREATE INDEX idx_phoneNumber ON "user" (phoneNumber);
+CREATE INDEX idx_email ON "user" (email);
+
+CREATE TABLE role
+(
+    id   SERIAL PRIMARY KEY,
+    name VARCHAR(50) UNIQUE NOT NULL
+);
+INSERT INTO role (id, name)
+VALUES (1, 'USER'),
+       (2, 'ADMIN');
+
+CREATE TABLE role_on_user
+(
+    id     SERIAL PRIMARY KEY,
+    userId INTEGER,
+    roleId INTEGER,
+    FOREIGN KEY (userId) REFERENCES "user" ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (roleId) REFERENCES "role" ON DELETE CASCADE ON UPDATE CASCADE
+);
 
 CREATE TABLE feedback
 (
@@ -64,15 +85,15 @@ CREATE TABLE ingredient_on_pizza
 CREATE TABLE order_status
 (
     id   SERIAL PRIMARY KEY,
-    type VARCHAR(15) NOT NULL
+    type VARCHAR(20) NOT NULL
 );
 INSERT INTO order_status (id, type)
-VALUES (1, 'Обрабатывается'),
-       (2, 'Создан'),
-       (3, 'готовится'),
-       (4, 'готов'),
-       (5, 'доставляется'),
-       (6, 'доставлен');
+VALUES (1, 'Pending'),
+       (2, 'Created'),
+       (3, 'Cooking'),
+       (4, 'Ready to deliver'),
+       (5, 'Delivering'),
+       (6, 'Done');
 
 CREATE TABLE delivery_type
 (
@@ -80,8 +101,8 @@ CREATE TABLE delivery_type
     type VARCHAR(15) NOT NULL
 );
 INSERT INTO delivery_type (id, type)
-VALUES (1, 'Самовывоз'),
-       (2, 'Доставка');
+VALUES (1, 'Pickup'),
+       (2, 'Delivery');
 
 CREATE TABLE "order"
 (
@@ -108,10 +129,10 @@ CREATE TABLE part
     type VARCHAR(15) NOT NULL
 );
 INSERT INTO part (id, type)
-VALUES (1, 'Целая'),
-       (2, 'Половина'),
-       (3, 'Четверть'),
-       (4, 'Кусок');
+VALUES (1, 'Full'),
+       (2, 'Half'),
+       (3, 'Quarter'),
+       (4, 'Piece');
 
 CREATE TABLE size_to_price_correlation
 (
@@ -120,9 +141,9 @@ CREATE TABLE size_to_price_correlation
     coefficient NUMERIC
 );
 INSERT INTO size_to_price_correlation (id, type, coefficient)
-VALUES (1, 'Стандарт (33 см)', 1),
-       (2, 'Мини (25 см)', 0.8),
-       (3, 'Большая (40 см)', 1.2);
+VALUES (1, 'Standard (33sm)', 1),
+       (2, 'Mini (25sm)', 0.8),
+       (3, 'Huge (40sm)', 1.2);
 
 CREATE TABLE dough
 (
@@ -130,8 +151,8 @@ CREATE TABLE dough
     type VARCHAR(15) NOT NULL
 );
 INSERT INTO dough (id, type)
-VALUES (1, 'Тонкое'),
-       (2, 'Толстое');
+VALUES (1, 'Thin'),
+       (2, 'Thick');
 
 CREATE TABLE base
 (
@@ -139,8 +160,8 @@ CREATE TABLE base
     type VARCHAR(15) NOT NULL
 );
 INSERT INTO base (id, type)
-VALUES (1, 'Томатная'),
-       (2, 'Сливочная');
+VALUES (1, 'Tomato'),
+       (2, 'Creamy');
 
 CREATE TABLE ordered_pizza
 (

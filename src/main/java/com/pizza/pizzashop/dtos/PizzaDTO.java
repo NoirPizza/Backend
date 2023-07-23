@@ -3,13 +3,14 @@ package com.pizza.pizzashop.dtos;
 import com.pizza.pizzashop.entities.Pizza;
 import jakarta.validation.constraints.*;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
 /**
  * DTO for {@link Pizza}
  */
-public class PizzaDTO {
+public class PizzaDTO implements Serializable {
     private Long id;
     @NotNull
     @NotBlank(message = "Name is required")
@@ -131,6 +132,6 @@ public class PizzaDTO {
                 "weight = " + weight + ", " +
                 "description = " + description + ", " +
                 "image = " + image + ", " +
-                "ingredients = " + ingredients.toString() + ")";
+                "ingredients = " + ingredients + ")";
     }
 }
