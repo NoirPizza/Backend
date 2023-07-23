@@ -1,18 +1,46 @@
 spring:
+  autoconfigure:
+    exclude: org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
   datasource:
-    password: 64_asdF12
-    url: jdbc:postgresql://localhost:5432/pizza
-    username: postgres
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  devtools:
+    restart:
+      enabled: false
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     open-in-view: false
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
+  security:
+    filter:
+      order: 10
 management:
+  health:
+    redis:
+      enabled: true
   endpoints:
     web:
       exposure:
         include: health, shutdown, prometheus
+      cors:
+        allowed-origins: "*"
   endpoint:
     shutdown:
       enabled: true
+logging:
+    level:
+        web: debug
+        org:
+          springframework:
+            security: debug
+
+jwt:
+  secret_key: ${JWT_SECRET_KEY}
+  access_token:
+    lifetime: ${JWT_ACCESS_TOKEN_LIFETIME}

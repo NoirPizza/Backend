@@ -1,6 +1,5 @@
 package com.pizza.pizzashop.controllers;
 
-import com.pizza.pizzashop.dtos.ErrorDTO;
 import com.pizza.pizzashop.dtos.PizzaDTO;
 import com.pizza.pizzashop.exceptions.NotFoundException;
 import com.pizza.pizzashop.exceptions.ValidationFailedException;
@@ -28,7 +27,6 @@ public class PizzaController {
         this.pizzaService = pizzaService;
     }
 
-    // TODO: think about pagination and various filters
     @GetMapping
     public ResponseEntity<List<PizzaDTO>> getAllPizzas() {
         List<PizzaDTO> pizzas = pizzaService.getAllPizzas();
