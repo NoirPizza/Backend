@@ -1,11 +1,30 @@
 package com.pizza.pizzashop.entities;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 import java.time.Instant;
 import java.util.List;
 
+/**
+ * This class represents a user entity in the system.
+ * It is annotated with JPA annotations to map the class to the corresponding database table.
+ * It also defines indexes to improve database query performance for specific columns.
+ */
 @Entity
 @Table(name = "\"user\"", indexes = {
         @Index(name = "user_login_key", columnList = "login", unique = true),
@@ -18,7 +37,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private Long id;
 
     @Size(max = 255)
     @NotNull
@@ -47,7 +66,7 @@ public class User {
     @NotBlank
     @Pattern(regexp = "^\\+?\\d{11}$|^8\\d{10}$")
     @Column(name = "phonenumber", nullable = false, length = 12)
-    private String phonenumber;
+    private String phoneNumber;
 
     @Size(max = 50)
     @Column(name = "email", length = 50)
@@ -71,12 +90,39 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "roleid"))
     private List<Role> roles;
 
+    public User(
+            Long id,
+            String login,
+            String password,
+            String name,
+            String surname,
+            String phoneNumber,
+            String email,
+            String birthday,
+            Instant createdAt,
+            Instant updatedAt
+    ) {
 
-    public Integer getId() {
+        this.id = id;
+        this.login = login;
+        this.password = password;
+        this.name = name;
+        this.surname = surname;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.birthday = birthday;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
+    public User() {
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -112,12 +158,12 @@ public class User {
         this.surname = surname;
     }
 
-    public @NotNull String getPhonenumber() {
-        return phonenumber;
+    public @NotNull String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setPhonenumber(@NotNull String phonenumber) {
-        this.phonenumber = phonenumber;
+    public void setPhoneNumber(@NotNull String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public String getEmail() {

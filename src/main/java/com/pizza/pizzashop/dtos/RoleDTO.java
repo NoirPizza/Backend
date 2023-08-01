@@ -6,19 +6,20 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * DTO for {@link com.pizza.pizzashop.entities.Role}
+ * The RoleDTO class represents a data transfer object (DTO) that encapsulates role information in a standardized format.
+ * It is used to provide a consistent structure for passing role details, including its ID and name.
  */
 public class RoleDTO implements Serializable {
-    private final Integer id;
+    private final Long id;
     @NotNull
     private final String name;
 
-    public RoleDTO(Integer id, @NotNull String name) {
+    public RoleDTO(Long id, @NotNull String name) {
         this.id = id;
         this.name = name;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 

@@ -1,6 +1,8 @@
 spring:
   autoconfigure:
-    exclude: org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+    exclude: > 
+      org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration,
+      org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
   data:
     redis:
       host: ${REDIS_HOST:localhost}
@@ -27,7 +29,10 @@ management:
   endpoints:
     web:
       exposure:
-        include: health, shutdown, prometheus
+        include: >
+          health, 
+          shutdown, 
+          prometheus
       cors:
         allowed-origins: "*"
   endpoint:
@@ -35,10 +40,10 @@ management:
       enabled: true
 logging:
     level:
-        web: debug
+        web: info
         org:
           springframework:
-            security: debug
+            security: info
 
 jwt:
   secret_key: ${JWT_SECRET_KEY}

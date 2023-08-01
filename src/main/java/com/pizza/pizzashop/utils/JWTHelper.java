@@ -2,6 +2,7 @@ package com.pizza.pizzashop.utils;
 
 import com.pizza.pizzashop.exceptions.TokenValidationException;
 import com.pizza.pizzashop.security.CustomUserDetails;
+import com.pizza.pizzashop.utils.GlobalLogger.GlobalLogger;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -14,6 +15,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This class provides utility methods for handling JSON Web Tokens (JWT) used for user authentication.
+ * It is responsible for generating, validating, and extracting information from JWTs.
+ */
 @Component
 public class JWTHelper {
     @Value("${jwt.secret_key}")
@@ -22,7 +27,22 @@ public class JWTHelper {
     @Value("${jwt.access_token.lifetime}")
     private Integer tokenLifetime;
 
+    public void setSecretKeyString(String secretKeyString) {
+        this.secretKeyString = secretKeyString;
+    }
+
+    public void setTokenLifetime(Integer tokenLifetime) {
+        this.tokenLifetime = tokenLifetime;
+    }
+
+    /**
+     * Generates a JWT based on the provided authentication object.
+     *
+     * @param authentication The authentication object containing user details.
+     * @return The generated JWT as a string.
+     */
     public String generateToken(Authentication authentication) {
+        GlobalLogger.log("ERROR", secretKeyString);
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
         Map<String, Object> claims = new HashMap<>();
@@ -37,6 +57,13 @@ public class JWTHelper {
                 .compact();
     }
 
+    /**
+     * Validates a JWT to ensure it is well-formed and not expired.
+     *
+     * @param token The JWT to validate.
+     * @return True if the JWT is valid and not expired; otherwise, false.
+     * @throws TokenValidationException TokenValidationException If the token is not valid or has expired.
+     */
     public boolean validateToken(String token) throws TokenValidationException {
         try {
             Jwts
@@ -50,8 +77,14 @@ public class JWTHelper {
         }
     }
 
-    public Integer extractUserId(String token) {
-        return Integer.valueOf(
+    /**
+     * Extracts the user ID from a JWT.
+     *
+     * @param token The JWT from which to extract the user ID.
+     * @return The user ID as an integer.
+     */
+    public Long extractUserId(String token) {
+        return Long.valueOf(
                 Jwts
                         .parserBuilder()
                         .setSigningKey(Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKeyString)))
@@ -61,6 +94,12 @@ public class JWTHelper {
                         .getSubject());
     }
 
+    /**
+     * Helper method to check if a JWT has expired.
+     *
+     * @param token The JWT to check.
+     * @return True if the JWT has expired; otherwise, false.
+     */
     private boolean isTokenExpired(String token) {
         Date expirationDate = Jwts
                 .parserBuilder()

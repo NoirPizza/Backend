@@ -171,6 +171,7 @@ CREATE TABLE ordered_pizza
     doughId INTEGER NOT NULL,
     baseId  INTEGER NOT NULL,
     partId  INTEGER NOT NULL,
+    amount  INTEGER NOT NULL,
     FOREIGN KEY (pizzaId) REFERENCES "pizza" ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (sizeId) REFERENCES "size_to_price_correlation" ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (doughId) REFERENCES "dough" ON DELETE CASCADE ON UPDATE CASCADE,
@@ -183,6 +184,7 @@ CREATE TABLE ordered_pizza_addition
     id             SERIAL PRIMARY KEY,
     orderedPizzaId INTEGER NOT NULL,
     ingredientId   INTEGER NOT NULL,
+    amount         INTEGER NOT NULL,
     FOREIGN KEY (orderedPizzaId) REFERENCES "ordered_pizza" ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (ingredientId) REFERENCES "pizza_ingredient" ON DELETE CASCADE ON UPDATE CASCADE
 );

@@ -1,6 +1,6 @@
 package com.pizza.pizzashop.dtos;
 
-import com.pizza.pizzashop.entities.Pizza;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import jakarta.validation.constraints.*;
 
 import java.io.Serializable;
@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * DTO for {@link Pizza}
+ * This class represents a data transfer object (DTO) that encapsulates pizza information in a standardized format.
+ * It is used to provide a consistent structure for passing pizza details, including its ID, name, weight, price,
  */
 public class PizzaDTO implements Serializable {
     private Long id;
@@ -31,6 +32,7 @@ public class PizzaDTO implements Serializable {
     @Size(min = 1, message = "Must be at least 1 ingredient added")
     private List<PizzaIngredientDTO> ingredients;
 
+    @JsonCreator
     public PizzaDTO(Long id,
                     @NotNull String name,
                     @NotNull Integer weight,
