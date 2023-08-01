@@ -11,25 +11,29 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * This class implements the UserDetails interface and represents custom user details used for authentication and authorization.
+ * It holds information about a user's ID, login, email, phone number, password, name, surname, and authorities (roles).
+ */
 public class CustomUserDetails implements UserDetails {
-    private Integer id;
+    private final Long id;
 
-    private String login;
+    private final String login;
 
-    private String email;
+    private final String email;
 
-    private String phonenumber;
+    private final String phonenumber;
 
-    private String password;
+    private final String password;
 
-    private String name;
+    private final String name;
 
-    private String surname;
+    private final String surname;
 
-    private Collection<? extends GrantedAuthority> authorities;
+    private final Collection<? extends GrantedAuthority> authorities;
 
     public CustomUserDetails(
-            Integer id,
+            Long id,
             String login,
             String email,
             String phonenumber,
@@ -52,6 +56,12 @@ public class CustomUserDetails implements UserDetails {
         }
     }
 
+    /**
+     * Static factory method to create a CustomUserDetails object from a User entity.
+     *
+     * @param user The User entity from which to create the CustomUserDetails object.
+     * @return A new CustomUserDetails object representing the user's custom details.
+     */
     public static CustomUserDetails create(User user) {
         List<GrantedAuthority> authorities = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
@@ -60,7 +70,7 @@ public class CustomUserDetails implements UserDetails {
                 user.getId(),
                 user.getLogin(),
                 user.getEmail(),
-                user.getPhonenumber(),
+                user.getPhoneNumber(),
                 user.getPassword(),
                 user.getName(),
                 user.getSurname(),
@@ -72,7 +82,7 @@ public class CustomUserDetails implements UserDetails {
         return authorities == null ? null : new ArrayList<>(authorities);
     }
 
-    public Integer getId() {
+    public Long getId() {
         return this.id;
     }
 

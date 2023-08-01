@@ -10,10 +10,12 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * DTO for {@link com.pizza.pizzashop.entities.User}
+ * The UserDTO class represents a data transfer object (DTO) that encapsulates user information in a standardized format.
+ * It is used to provide a consistent structure for passing user details, including its ID, surname, email, birthday,
+ * roles, login, password, name, and phone number.
  */
 public class UserDTO implements Serializable {
-    private final Integer id;
+    private final Long id;
     @Size(max = 40)
     @NotBlank
     private final String surname;
@@ -36,18 +38,19 @@ public class UserDTO implements Serializable {
     @NotNull
     private final String name;
     @NotNull
-    private final String phonenumber;
+    private final String phoneNumber;
 
     public UserDTO(
-            Integer id,
+            Long id,
+            @NotNull String name,
             String surname,
-            String email,
-            String birthday,
-            @NotNull List<RoleDTO> roles,
             @NotNull String login,
             @NotNull String password,
-            @NotNull String name,
-            @NotNull String phonenumber) {
+            String email,
+            @NotNull String phoneNumber,
+            String birthday,
+            @NotNull List<RoleDTO> roles
+            ) {
         this.id = id;
         this.surname = surname;
         this.email = email;
@@ -56,10 +59,10 @@ public class UserDTO implements Serializable {
         this.login = login;
         this.password = password;
         this.name = name;
-        this.phonenumber = phonenumber;
+        this.phoneNumber = phoneNumber;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
@@ -83,8 +86,8 @@ public class UserDTO implements Serializable {
         return name;
     }
 
-    public @NotNull String getPhonenumber() {
-        return phonenumber;
+    public @NotNull String getPhoneNumber() {
+        return phoneNumber;
     }
 
     public @NotNull String getLogin() {
@@ -106,12 +109,12 @@ public class UserDTO implements Serializable {
                 Objects.equals(this.birthday, entity.birthday) &&
                 Objects.equals(this.roles, entity.roles) &&
                 Objects.equals(this.name, entity.name) &&
-                Objects.equals(this.phonenumber, entity.phonenumber);
+                Objects.equals(this.phoneNumber, entity.phoneNumber);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, surname, email, birthday, roles, name, phonenumber);
+        return Objects.hash(id, surname, email, birthday, roles, name, phoneNumber);
     }
 
     @Override
@@ -123,6 +126,6 @@ public class UserDTO implements Serializable {
                 "birthday = " + birthday + ", " +
                 "roles = " + roles + ", " +
                 "name = " + name + ", " +
-                "phonenumber = " + phonenumber + ")";
+                "phoneNumber = " + phoneNumber + ")";
     }
 }

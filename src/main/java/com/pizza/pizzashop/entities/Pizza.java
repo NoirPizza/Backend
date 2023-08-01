@@ -1,9 +1,22 @@
 package com.pizza.pizzashop.entities;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
 
 import java.util.List;
 
+/**
+ * This class represents a pizza entity in the system.
+ * It is annotated with JPA annotations to map the class to the corresponding database table.
+ */
 @Entity
 @Table(name = "pizza")
 public class Pizza {
@@ -32,6 +45,28 @@ public class Pizza {
             joinColumns = @JoinColumn(name = "pizzaid"),
             inverseJoinColumns = @JoinColumn(name = "ingredientid"))
     private List<PizzaIngredient> ingredients;
+
+    public Pizza(
+            Long id,
+            String name,
+            Integer weight,
+            Integer price,
+            String description,
+            String image,
+            List<PizzaIngredient> ingredients
+    ) {
+        this.id = id;
+        this.name = name;
+        this.weight = weight;
+        this.price = price;
+        this.description = description;
+        this.image = image;
+        this.ingredients = ingredients;
+    }
+
+    public Pizza() {
+
+    }
 
     public Long getId() {
         return id;

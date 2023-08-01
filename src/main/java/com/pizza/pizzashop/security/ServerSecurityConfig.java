@@ -20,11 +20,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * This class is a configuration class responsible for configuring Spring Security for the server application.
+ * It enables Web Security and Method Security and defines security-related configurations.
+ */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class ServerSecurityConfig {
-    public static final String[] ENDPOINTS_WHITELIST = {
+    protected static final String[] ENDPOINTS_WHITELIST = {
             "/api/auth/sign-in",
             "/api/auth/sign-up"
     };
@@ -43,6 +47,13 @@ public class ServerSecurityConfig {
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
     }
 
+    /**
+     * Configures the security filter chain for the HTTP requests.
+     *
+     * @param http The HttpSecurity object to configure security on incoming HTTP requests.
+     * @return The SecurityFilterChain object representing the configured security filter chain.
+     * @throws Exception Exception If there is an error during configuration.
+     */
     @Bean
     @Order(1)
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -52,18 +63,23 @@ public class ServerSecurityConfig {
                 .rememberMe(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(
-                        (session) -> session
+                        session -> session
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(
-                        (exception) -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
+                        exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .authorizeHttpRequests(
-                        (authorize) -> authorize
+                        authorize -> authorize
                                 .requestMatchers(ENDPOINTS_WHITELIST).permitAll()
                                 .anyRequest().authenticated());
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
+    /**
+     * Configures the AuthenticationManager bean.
+     *
+     * @return The configured AuthenticationManager.
+     */
     @Bean
     public AuthenticationManager authManager() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -72,12 +88,24 @@ public class ServerSecurityConfig {
         return new ProviderManager(authProvider);
     }
 
+    /**
+     * Configures the AuthenticationManager bean using the AuthenticationConfiguration.
+     *
+     * @param authenticationConfiguration The AuthenticationConfiguration instance to get the AuthenticationManager.
+     * @return The configured AuthenticationManager.
+     * @throws Exception Exception If there is an error during configuration.
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
             throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+    /**
+     * Creates a PasswordEncoder bean for encoding passwords.
+     *
+     * @return The PasswordEncoder bean.
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
